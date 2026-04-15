@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Divide and Conquer</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+  :root {
+    --amber:  #f5a623;
+    --green:  #4ecb8d;
+    --purple: #a78bfa;
+    --blue:   #60a5fa;
+    --red:    #f87171;
+    --bg:     #0a0a0f;
+    --bg2:    #10101a;
+    --bg3:    #181824;
+    --border: #2a2a3a;
+    --text:   #e8e8f0;
+    --muted:  #8888a8;
+  }
+
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+  .reveal h1 { font-size: 1.6em; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.1em; color: var(--amber); margin-bottom: .2em; }
+  .reveal h3 { font-size: .78em; color: var(--green); margin-bottom: .15em; }
+  .reveal p  { font-size: .56em; line-height: 1.45; color: var(--text); }
+  .reveal li { font-size: .54em; line-height: 1.45; margin-bottom: .1em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { box-shadow: none; background: var(--bg3); border: 1px solid var(--border);
+                 border-radius: 6px; padding: .3em .5em; margin: .25em 0; }
+  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #cdd6f4; }
+
+  /* ── slide chrome ── */
+  .slide-hdr {
+    display: flex; align-items: center; gap: .4em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .2em; margin-bottom: .3em;
+  }
+  .slide-hdr .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .42em; font-weight: 500;
+    color: var(--bg); background: var(--amber);
+    padding: .1em .4em; border-radius: 3px;
+    letter-spacing: .04em;
+  }
+  .slide-hdr h2 { margin: 0; font-size: .95em; }
+
+  /* ── two-column ── */
+  .cols   { display: grid; gap: .5em; }
+  .cols-2 { grid-template-columns: 1fr 1fr; }
+  .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cols-6040 { grid-template-columns: 6fr 4fr; }
+  .cols-4060 { grid-template-columns: 4fr 6fr; }
+
+  /* ── cards ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: .35em .6em;
+  }
+  .card.amber { border-left: 3px solid var(--amber); }
+  .card.green { border-left: 3px solid var(--green); }
+  .card.purple{ border-left: 3px solid var(--purple); }
+  .card.blue  { border-left: 3px solid var(--blue); }
+  .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: .64em; margin: 0 0 .12em; }
+  .card p  { font-size: .52em; margin: 0; color: #b8b8d0; }
+  .card ul { margin: 0; padding-left: 1em; }
+  .card li { font-size: .52em; color: #b8b8d0; margin-bottom: .02em; }
+
+  /* ── table ── */
+  .reveal table { width: 100%; border-collapse: collapse; font-size: .5em; }
+  .reveal table th { background: var(--bg3); color: var(--amber); font-weight: 600;
+                     padding: .2em .4em; border: 1px solid var(--border); text-align: left; }
+  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #ccc; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+
+  /* ── accent spans ── */
+  .a  { color: var(--amber); font-weight: 600; }
+  .g  { color: var(--green); font-weight: 600; }
+  .p  { color: var(--purple); font-weight: 600; }
+  .b  { color: var(--blue); font-weight: 600; }
+  .r  { color: var(--red); font-weight: 600; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── SVG graph diagrams ── */
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+
+  /* ── pill badges ── */
+  .pill {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: .44em; padding: .08em .4em; border-radius: 99px;
+    border: 1px solid; margin: 0 .08em;
+  }
+  .pill.amber { color: var(--amber); border-color: var(--amber); }
+  .pill.green { color: var(--green); border-color: var(--green); }
+  .pill.purple{ color: var(--purple); border-color: var(--purple); }
+  .pill.blue  { color: var(--blue); border-color: var(--blue); }
+
+  /* ── footer — hidden ── */
+  .reveal .slide-footer { display: none; }
+  /* title slide special */
+  .title-slide h1 { font-size: 1.8em; }
+  .title-slide .subtitle {
+    font-size: .7em; color: var(--green); font-family: 'DM Sans', sans-serif;
+    font-weight: 300; letter-spacing: .04em; margin: .3em 0 .6em;
+  }
+  .title-slide .meta { font-size: .48em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── super-step animator ── */
+  .ss-row {
+    display: flex; gap: .25em; align-items: center;
+    margin: .1em 0; font-size: .55em; font-family: 'JetBrains Mono', monospace;
+  }
+  .ss-node {
+    padding: .2em .55em; border-radius: 5px; font-size: .9em;
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  }
+  .ss-node.active { background: #1a2a1a; border-color: var(--green); color: var(--green); }
+  .ss-node.done   { background: #1a1a2a; border-color: var(--purple); color: var(--purple); }
+  .ss-arrow { color: var(--amber); }
+  .ss-label { font-size: .8em; color: var(--muted); margin-left: .3em; }
+
+  /* reduce default margins */
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+.reveal .slides > section { display: flex !important; flex-direction: column !important; overflow-y: auto !important; align-items: stretch !important; justify-content: flex-start !important; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 01 — Title
+══════════════════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
+  <h1>Divide and<br>Conquer</h1>
+  <div class="subtitle">
+    Master theorem · Merge sort · Quick sort ·<br>
+    Strassen's algorithm · Closest pair · FFT
+  </div>
+  <div style="width:60px; height:3px; background:var(--amber); margin-bottom:1.4em;"></div>
+  <div class="meta">
+    Mid-level software engineer track &nbsp;·&nbsp; 20 slides
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 02 — The Paradigm
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">02</span>
+    <h2>The Paradigm: Divide, Conquer, Combine</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Three steps</h3>
+      <p>Every divide-and-conquer algorithm follows the same recursive blueprint:</p>
+      <div style="display:flex; flex-direction:column; gap:.3em; margin-top:0.3em">
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.35em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--amber)">Divide</strong> — break the problem into smaller, independent subproblems of the same type</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.35em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--green)">Conquer</strong> — solve each subproblem recursively; if small enough, solve directly (base case)</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.35em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--purple)">Combine</strong> — merge the subproblem solutions into a solution for the original problem</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>When to use D&amp;C</h3>
+      <ul>
+        <li>Problem has <strong>optimal substructure</strong> — solution builds from sub-solutions</li>
+        <li>Subproblems are <strong>independent</strong> — no shared mutable state</li>
+        <li>Combining is efficient — merging cost must not dominate</li>
+        <li>Examples: sorting, searching, geometric problems, algebraic transforms</li>
+      </ul>
+      <div class="card blue" style="margin-top:0.8em">
+        <p><strong style="color:var(--blue)">D&amp;C vs Dynamic Programming:</strong> both decompose problems. D&amp;C subproblems are independent (no overlap); DP subproblems overlap and require memoisation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 03 — Recurrence Relations
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">03</span>
+    <h2>Recurrence Relations</h2>
+  </div>
+  <div class="cols cols-6040">
+    <div>
+      <h3>Defining runtime recursively</h3>
+      <p>A D&amp;C algorithm with <code>a</code> subproblems of size <code>n/b</code> and <code>O(n<sup>d</sup>)</code> combine work has recurrence:</p>
+      <pre><code>T(n) = a · T(n/b) + O(n^d)</code></pre>
+      <h3>Solution methods</h3>
+      <ul>
+        <li><strong>Substitution</strong> — guess the form, prove by induction</li>
+        <li><strong>Recursion tree</strong> — draw the tree, sum work per level</li>
+        <li><strong>Master theorem</strong> — closed-form for <code>T(n) = aT(n/b) + O(n<sup>d</sup>)</code></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Common recurrence examples</h3>
+      <table>
+        <thead>
+          <tr><th>Algorithm</th><th>Recurrence</th><th>Solution</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Binary search</td><td><code>T(n) = T(n/2) + O(1)</code></td><td><code>O(log n)</code></td></tr>
+          <tr><td>Merge sort</td><td><code>T(n) = 2T(n/2) + O(n)</code></td><td><code>O(n log n)</code></td></tr>
+          <tr><td>Karatsuba</td><td><code>T(n) = 3T(n/2) + O(n)</code></td><td><code>O(n<sup>1.585</sup>)</code></td></tr>
+          <tr><td>Strassen</td><td><code>T(n) = 7T(n/2) + O(n<sup>2</sup>)</code></td><td><code>O(n<sup>2.807</sup>)</code></td></tr>
+          <tr><td>Naive multiply</td><td><code>T(n) = 4T(n/2) + O(n)</code></td><td><code>O(n<sup>2</sup>)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 04 — The Master Theorem
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">04</span>
+    <h2>The Master Theorem</h2>
+  </div>
+  <p>For recurrence <code>T(n) = a · T(n/b) + O(n<sup>d</sup>)</code> where <code>a &ge; 1</code>, <code>b &gt; 1</code>, <code>d &ge; 0</code>:</p>
+  <div class="cols cols-3" style="margin-top:0.3em">
+    <div class="card amber">
+      <h3>Case 1 — Leaves dominate</h3>
+      <p><code>d &lt; log<sub>b</sub>(a)</code></p>
+      <p style="margin-top:.3em"><code>T(n) = O(n<sup>log<sub>b</sub>(a)</sup>)</code></p>
+      <p style="margin-top:.3em; color:var(--muted)">Recursion branches faster than work shrinks</p>
+    </div>
+    <div class="card green">
+      <h3>Case 2 — Balanced</h3>
+      <p><code>d = log<sub>b</sub>(a)</code></p>
+      <p style="margin-top:.3em"><code>T(n) = O(n<sup>d</sup> · log n)</code></p>
+      <p style="margin-top:.3em; color:var(--muted)">Each level does equal work; log n levels total</p>
+    </div>
+    <div class="card purple">
+      <h3>Case 3 — Root dominates</h3>
+      <p><code>d &gt; log<sub>b</sub>(a)</code></p>
+      <p style="margin-top:.3em"><code>T(n) = O(n<sup>d</sup>)</code></p>
+      <p style="margin-top:.3em; color:var(--muted)">Combine cost dwarfs recursive cost</p>
+    </div>
+  </div>
+  <h3>Worked examples</h3>
+  <table>
+    <thead>
+      <tr><th>Algorithm</th><th>a, b, d</th><th>log<sub>b</sub>(a)</th><th>Case</th><th>Result</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Merge sort</td><td>2, 2, 1</td><td>1</td><td>Case 2</td><td><code>O(n log n)</code></td></tr>
+      <tr><td>Binary search</td><td>1, 2, 0</td><td>0</td><td>Case 2</td><td><code>O(log n)</code></td></tr>
+      <tr><td>Strassen</td><td>7, 2, 2</td><td>2.807</td><td>Case 1</td><td><code>O(n<sup>2.807</sup>)</code></td></tr>
+      <tr><td>Karatsuba</td><td>3, 2, 1</td><td>1.585</td><td>Case 1</td><td><code>O(n<sup>1.585</sup>)</code></td></tr>
+    </tbody>
+  </table>
+  <div class="card blue" style="margin-top:0.4em">
+    <p>The Master Theorem does not cover all recurrences. <strong>Akra–Bazzi</strong> generalises it to unequal subproblem sizes.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 05 — Merge Sort
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">05</span>
+    <h2>Merge Sort</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>The canonical D&amp;C sort</h3>
+      <div style="display:flex; flex-direction:column; gap:.25em; margin-top:0.2em">
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--amber)">Divide</strong> — split array into two halves</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--green)">Conquer</strong> — recursively sort each half</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--purple)">Combine</strong> — merge two sorted halves in <code>O(n)</code></span>
+        </div>
+      </div>
+      <h3 style="margin-top:.4em">Properties</h3>
+      <ul>
+        <li><strong>Time:</strong> <code>O(n log n)</code> worst, average, and best case</li>
+        <li><strong>Space:</strong> <code>O(n)</code> auxiliary (merge buffer)</li>
+        <li><strong>Stable:</strong> yes — equal elements preserve original order</li>
+        <li><strong>Not in-place:</strong> requires extra memory proportional to input</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Pseudocode</h3>
+      <pre><code>merge_sort(A, lo, hi):
+    if hi - lo &lt;= 1: return
+    mid = (lo + hi) / 2
+    merge_sort(A, lo, mid)
+    merge_sort(A, mid, hi)
+    merge(A, lo, mid, hi)
+
+merge(A, lo, mid, hi):
+    L = A[lo..mid]
+    R = A[mid..hi]
+    i = j = 0, k = lo
+    while i &lt; |L| and j &lt; |R|:
+        if L[i] &lt;= R[j]:
+            A[k++] = L[i++]
+        else:
+            A[k++] = R[j++]
+    copy remaining L or R into A</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 06 — Merge Sort Analysis
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">06</span>
+    <h2>Merge Sort — Analysis</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Recursion tree</h3>
+      <pre><code>Level 0:     n work  (1 merge of n)
+Level 1:     n work  (2 merges of n/2)
+Level 2:     n work  (4 merges of n/4)
+  ...
+Level log n: n work  (n merges of 1)
+
+Total: n · log n</code></pre>
+      <h3>Inversion counting</h3>
+      <p>Merge sort can count inversions during the merge step. When a right-side element is chosen before left-side elements, it crosses over all remaining left elements — add that count.</p>
+    </div>
+    <div>
+      <h3>Practical variants</h3>
+      <div class="card amber" style="margin-bottom:.3em">
+        <h3>Timsort</h3>
+        <p>Python and Java's hybrid: natural merge sort + insertion sort for small runs. Exploits partially-sorted input for <code>O(n)</code> best case.</p>
+      </div>
+      <div class="card green" style="margin-bottom:.3em">
+        <h3>Bottom-up merge sort</h3>
+        <p>Iterative variant. Merge pairs of size 1, then 2, then 4, ... Better cache locality, no recursion overhead.</p>
+      </div>
+      <div class="card purple">
+        <h3>External merge sort</h3>
+        <p>Standard algorithm for sorting data that does not fit in RAM. Split into sorted runs, merge runs from disk using a priority queue.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card blue" style="margin-top:0.4em">
+    <p>Merge sort is the <strong>comparison sort baseline</strong> — guaranteed <code>O(n log n)</code> regardless of input distribution.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 07 — Quick Sort
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">07</span>
+    <h2>Quick Sort</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Algorithm</h3>
+      <div style="display:flex; flex-direction:column; gap:.25em; margin-top:0.2em">
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--amber)">Divide</strong> — choose a pivot, partition the array around it</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--green)">Conquer</strong> — recursively sort elements less than and greater than pivot</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
+          <span style="color:var(--text); line-height:1.5"><strong style="color:var(--purple)">Combine</strong> — nothing; partitioning is in-place</span>
+        </div>
+      </div>
+      <h3 style="margin-top:.4em">Complexity</h3>
+      <table>
+        <thead>
+          <tr><th>Case</th><th>Time</th><th>When</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Best</td><td><code>O(n log n)</code></td><td>Balanced partitions</td></tr>
+          <tr><td>Average</td><td><code>O(n log n)</code></td><td>Random pivot</td></tr>
+          <tr><td>Worst</td><td><code>O(n<sup>2</sup>)</code></td><td>Sorted + bad pivot</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Pseudocode (Lomuto)</h3>
+      <pre><code>quicksort(A, lo, hi):
+    if lo &lt; hi:
+        p = partition(A, lo, hi)
+        quicksort(A, lo, p - 1)
+        quicksort(A, p + 1, hi)</code></pre>
+      <h3>Why Quick Sort wins in practice</h3>
+      <ul>
+        <li><strong>In-place:</strong> <code>O(log n)</code> stack space vs <code>O(n)</code> for merge sort</li>
+        <li><strong>Cache-friendly:</strong> sequential access during partitioning</li>
+        <li><strong>Small constant:</strong> fewer data movements on average</li>
+        <li><strong>Randomised pivot</strong> eliminates adversarial worst case</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 08 — Partition Schemes
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">08</span>
+    <h2>Partition Schemes — Lomuto &amp; Hoare</h2>
+  </div>
+  <div class="cols cols-3">
+    <div class="card amber">
+      <h3>Lomuto partition</h3>
+      <pre><code>partition(A, lo, hi):
+  pivot = A[hi]
+  i = lo
+  for j = lo to hi-1:
+    if A[j] &lt;= pivot:
+      swap(A[i], A[j])
+      i++
+  swap(A[i], A[hi])
+  return i</code></pre>
+      <ul>
+        <li>Simple, easy to prove correct</li>
+        <li>~n comparisons, up to n swaps</li>
+        <li>Poor on many duplicates</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>Hoare partition</h3>
+      <pre><code>partition(A, lo, hi):
+  pivot = A[lo]
+  i = lo-1, j = hi+1
+  loop:
+    do i++ while A[i]&lt;pivot
+    do j-- while A[j]&gt;pivot
+    if i &gt;= j: return j
+    swap(A[i], A[j])</code></pre>
+      <ul>
+        <li>~n/2 swaps on average</li>
+        <li>Does not place pivot in final position</li>
+        <li>Better cache behaviour</li>
+      </ul>
+    </div>
+    <div class="card purple">
+      <h3>Three-way (DNF)</h3>
+      <p>Partitions into <code>&lt; pivot</code>, <code>= pivot</code>, <code>&gt; pivot</code>. Essential when many duplicates are present.</p>
+      <pre><code>lo, mid, hi pointers
+scan left to right:
+  &lt; pivot → swap to lo
+  = pivot → advance mid
+  &gt; pivot → swap to hi</code></pre>
+      <p style="margin-top:.3em">Used by <code>std::sort</code> variants and <code>pdqsort</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 09 — Binary Search
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">09</span>
+    <h2>Binary Search &amp; Variants</h2>
+  </div>
+  <div class="cols cols-6040">
+    <div>
+      <h3>Classic binary search</h3>
+      <pre><code>binary_search(A, target):
+    lo, hi = 0, len(A) - 1
+    while lo &lt;= hi:
+        mid = lo + (hi - lo) / 2
+        if A[mid] == target: return mid
+        elif A[mid] &lt; target: lo = mid + 1
+        else: hi = mid - 1
+    return -1</code></pre>
+      <p><strong>Time:</strong> <code>O(log n)</code> — recurrence <code>T(n) = T(n/2) + O(1)</code>, Master Case 2</p>
+      <p><strong>Space:</strong> <code>O(1)</code> iterative, <code>O(log n)</code> recursive</p>
+      <h3>Off-by-one pitfalls</h3>
+      <ul>
+        <li>Use <code>lo + (hi - lo) / 2</code> not <code>(lo + hi) / 2</code> to avoid overflow</li>
+        <li>Clarify inclusive vs exclusive bounds before coding</li>
+        <li>Test on arrays of size 0, 1, 2 — most bugs hide there</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Variants</h3>
+      <table>
+        <thead>
+          <tr><th>Variant</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Lower bound</strong></td><td>First index where <code>A[i] &ge; target</code></td></tr>
+          <tr><td><strong>Upper bound</strong></td><td>First index where <code>A[i] &gt; target</code></td></tr>
+          <tr><td><strong>Exponential</strong></td><td>Doubling to find range, then binary search — <code>O(log k)</code></td></tr>
+          <tr><td><strong>Interpolation</strong></td><td>Estimate by value distribution — <code>O(log log n)</code> uniform</td></tr>
+          <tr><td><strong>Fractional cascading</strong></td><td>Search multiple sorted lists — amortised <code>O(log n + k)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 10 — Strassen's Matrix Multiplication
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">10</span>
+    <h2>Strassen's Matrix Multiplication</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Strassen's insight (1969)</h3>
+      <p>Divide each <code>n×n</code> matrix into four <code>n/2 × n/2</code> submatrices. Naive block multiply needs <span class="r">8</span> recursive multiplications. Strassen reduces this to <span class="g">7</span>.</p>
+      <h3>The seven products</h3>
+      <pre><code>M1 = (A11 + A22)(B11 + B22)
+M2 = (A21 + A22) B11
+M3 = A11 (B12 - B22)
+M4 = A22 (B21 - B11)
+M5 = (A11 + A12) B22
+M6 = (A21 - A11)(B11 + B12)
+M7 = (A12 - A22)(B21 + B22)</code></pre>
+      <p>Result blocks computed from M1..M7 using only addition/subtraction.</p>
+    </div>
+    <div>
+      <h3>Complexity comparison</h3>
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Multiplications</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Naive</td><td>8 per level</td><td><code>O(n<sup>3</sup>)</code></td></tr>
+          <tr><td>Strassen</td><td>7 per level</td><td><code>O(n<sup>2.807</sup>)</code></td></tr>
+          <tr><td>CW variants</td><td>—</td><td><code>O(n<sup>2.372</sup>)</code> (galactic)</td></tr>
+        </tbody>
+      </table>
+      <div class="card amber" style="margin-top:0.5em">
+        <p>Strassen is practical for <code>n &ge; 64</code> or so. Below that threshold, the constant factor from extra additions makes naive faster. Libraries like BLAS switch strategies based on matrix size.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 11 — Closest Pair of Points
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">11</span>
+    <h2>Closest Pair of Points</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Given <code>n</code> points in the plane, find the pair with minimum Euclidean distance. Brute force: <code>O(n<sup>2</sup>)</code>.</p>
+      <h3>D&amp;C approach — <code>O(n log n)</code></h3>
+      <ol>
+        <li><strong>Sort</strong> points by x-coordinate</li>
+        <li><strong>Divide</strong> — split into left and right halves by median x</li>
+        <li><strong>Conquer</strong> — recursively find closest pair in each half: <code>d<sub>L</sub></code>, <code>d<sub>R</sub></code></li>
+        <li><strong>Combine</strong> — let <code>d = min(d<sub>L</sub>, d<sub>R</sub>)</code>. Check pairs straddling the dividing line within a strip of width <code>2d</code></li>
+      </ol>
+      <pre><code>T(n) = 2T(n/2) + O(n)  →  O(n log n)</code></pre>
+    </div>
+    <div>
+      <h3>The strip trick</h3>
+      <div style="background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:.5em;">
+        <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <!-- left region -->
+          <rect x="10" y="10" width="120" height="180" rx="4" fill="#1a1a28" stroke="#2a2a3a"/>
+          <text x="70" y="30" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#60a5fa">Left half</text>
+          <!-- right region -->
+          <rect x="170" y="10" width="120" height="180" rx="4" fill="#1a1a28" stroke="#2a2a3a"/>
+          <text x="230" y="30" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#60a5fa">Right half</text>
+          <!-- strip -->
+          <rect x="110" y="10" width="80" height="180" rx="0" fill="#2e1e00" opacity="0.3" stroke="#f5a623" stroke-dasharray="4,3"/>
+          <text x="150" y="30" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#f5a623">strip 2d</text>
+          <!-- dividing line -->
+          <line x1="150" y1="10" x2="150" y2="190" stroke="#f5a623" stroke-width="1.5" stroke-dasharray="6,3"/>
+          <!-- sample points -->
+          <circle cx="60" cy="80" r="4" fill="#4ecb8d"/><circle cx="90" cy="130" r="4" fill="#4ecb8d"/>
+          <circle cx="45" cy="160" r="4" fill="#4ecb8d"/><circle cx="110" cy="100" r="4" fill="#4ecb8d"/>
+          <circle cx="200" cy="70" r="4" fill="#a78bfa"/><circle cx="250" cy="140" r="4" fill="#a78bfa"/>
+          <circle cx="180" cy="120" r="4" fill="#a78bfa"/><circle cx="220" cy="170" r="4" fill="#a78bfa"/>
+          <!-- strip points highlighted -->
+          <circle cx="135" cy="90" r="5" fill="none" stroke="#f5a623" stroke-width="2"/><circle cx="135" cy="90" r="3" fill="#f5a623"/>
+          <circle cx="165" cy="105" r="5" fill="none" stroke="#f5a623" stroke-width="2"/><circle cx="165" cy="105" r="3" fill="#f5a623"/>
+        </svg>
+      </div>
+      <div class="card green" style="margin-top:.3em">
+        <p>For each point in the strip, compare to at most <strong>7</strong> subsequent points (sorted by y). Strip processing is <code>O(n)</code>, not <code>O(n<sup>2</sup>)</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 12 — Karatsuba Multiplication
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">12</span>
+    <h2>Karatsuba Multiplication</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Problem</h3>
+      <p>Multiply two <code>n</code>-digit integers. School algorithm: <code>O(n<sup>2</sup>)</code>.</p>
+      <h3>Karatsuba's trick (1960)</h3>
+      <p>Split each number into high and low halves:</p>
+      <pre><code>x = x_H · B^m + x_L
+y = y_H · B^m + y_L</code></pre>
+      <p>Naive: <strong>4</strong> multiplications of n/2-digit numbers. Karatsuba uses <strong>3</strong>:</p>
+      <pre><code>z0 = x_L · y_L
+z2 = x_H · y_H
+z1 = (x_L + x_H)(y_L + y_H) - z0 - z2
+
+x·y = z2·B^2m + z1·B^m + z0</code></pre>
+    </div>
+    <div>
+      <h3>Complexity</h3>
+      <p>Recurrence: <code>T(n) = 3T(n/2) + O(n)</code></p>
+      <p>Master Case 1: <code>log<sub>2</sub>(3) ≈ 1.585 &gt; 1</code> → <code>O(n<sup>1.585</sup>)</code></p>
+      <h3>Multiplication algorithm hierarchy</h3>
+      <table>
+        <thead>
+          <tr><th>Algorithm</th><th>Complexity</th><th>Crossover</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Schoolbook</td><td><code>O(n<sup>2</sup>)</code></td><td>n &lt; 20–80</td></tr>
+          <tr><td>Karatsuba</td><td><code>O(n<sup>1.585</sup>)</code></td><td>20–80 digits</td></tr>
+          <tr><td>Toom-Cook</td><td><code>O(n<sup>1.465</sup>)</code></td><td>~100+ digits</td></tr>
+          <tr><td>FFT-based</td><td><code>O(n log n log log n)</code></td><td>~10,000+ digits</td></tr>
+        </tbody>
+      </table>
+      <div class="card blue" style="margin-top:.4em">
+        <p>Python's <code>int</code> and GMP chain these algorithms as <code>n</code> grows.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 13 — Maximum Subarray
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">13</span>
+    <h2>Maximum Subarray Problem</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>D&amp;C approach — <code>O(n log n)</code></h3>
+      <ol>
+        <li><strong>Divide</strong> — split array at midpoint</li>
+        <li><strong>Conquer</strong> — recursively find max subarray in left and right halves</li>
+        <li><strong>Combine</strong> — find max subarray crossing the midpoint (linear scan)</li>
+        <li>Return maximum of left, right, and crossing</li>
+      </ol>
+      <pre><code>T(n) = 2T(n/2) + O(n)  →  O(n log n)</code></pre>
+    </div>
+    <div>
+      <h3>Kadane's algorithm — <code>O(n)</code></h3>
+      <pre><code>kadane(A):
+    max_here = max_so_far = A[0]
+    for i = 1 to n-1:
+        max_here = max(A[i],
+                       max_here + A[i])
+        max_so_far = max(max_so_far,
+                         max_here)
+    return max_so_far</code></pre>
+      <p>Single pass, <code>O(1)</code> space. Essentially dynamic programming.</p>
+    </div>
+  </div>
+  <h3>Comparison</h3>
+  <table>
+    <thead>
+      <tr><th></th><th>D&amp;C</th><th>Kadane</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Time</strong></td><td><code>O(n log n)</code></td><td><code>O(n)</code></td></tr>
+      <tr><td><strong>Parallelism</strong></td><td>Naturally parallel</td><td>Sequential</td></tr>
+      <tr><td><strong>Teaching value</strong></td><td>Demonstrates combine step</td><td>Demonstrates DP</td></tr>
+    </tbody>
+  </table>
+  <div class="card amber" style="margin-top:0.3em">
+    <p>The maximum subarray is a case where D&amp;C is instructive but not optimal. Kadane wins for serial execution; D&amp;C wins for parallel.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 14 — Median of Medians / Selection
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">14</span>
+    <h2>Median of Medians / Selection</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>The selection problem</h3>
+      <p>Find the k-th smallest element in an unsorted array.</p>
+      <h3>Quickselect — expected <code>O(n)</code></h3>
+      <p>Partition around a random pivot. Recurse only into the side containing index <code>k</code>. Expected <code>O(n)</code>, worst case <code>O(n<sup>2</sup>)</code>.</p>
+      <h3>Median of medians — worst-case <code>O(n)</code></h3>
+      <ol>
+        <li>Divide array into groups of 5</li>
+        <li>Find the median of each group (brute force)</li>
+        <li>Recursively find the median of those medians → pivot</li>
+        <li>Partition around this pivot</li>
+        <li>Recurse into the correct side</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Why groups of 5?</h3>
+      <p>The pivot is guaranteed to be between the 30th and 70th percentile. Each recursive call eliminates at least 30% of elements:</p>
+      <pre><code>T(n) = T(n/5) + T(7n/10) + O(n)</code></pre>
+      <p>This solves to <code>O(n)</code> because <code>1/5 + 7/10 = 9/10 &lt; 1</code>.</p>
+      <h3>In practice</h3>
+      <div class="card green" style="margin-bottom:.3em">
+        <p><code>std::nth_element</code> in C++ uses <strong>Introselect</strong>: Quickselect with median-of-medians fallback.</p>
+      </div>
+      <div class="card blue">
+        <p>The constant factor is large — Quickselect with random pivot is faster in practice. Median of medians is primarily of <strong>theoretical importance</strong>: it proves linear selection is possible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 15 — FFT
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">15</span>
+    <h2>FFT — Fast Fourier Transform</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>The Discrete Fourier Transform (DFT)</h3>
+      <p>Given a sequence of <code>n</code> complex numbers, the DFT computes <code>n</code> frequency components. Naive evaluation: <code>O(n<sup>2</sup>)</code>.</p>
+      <h3>Cooley–Tukey FFT (1965)</h3>
+      <p>Divide the DFT into two half-size DFTs on even-indexed and odd-indexed elements:</p>
+      <pre><code>X[k]     = E[k] + ω^k · O[k]
+X[k+n/2] = E[k] - ω^k · O[k]
+
+where ω = e^{-2πi/n}
+E = DFT of even elements
+O = DFT of odd elements</code></pre>
+    </div>
+    <div>
+      <h3>Complexity</h3>
+      <pre><code>T(n) = 2T(n/2) + O(n)  →  O(n log n)</code></pre>
+      <p>Master theorem Case 2. Reduces DFT from <code>O(n<sup>2</sup>)</code> to <code>O(n log n)</code>.</p>
+      <h3>The butterfly operation</h3>
+      <div style="background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:.5em;">
+        <svg viewBox="0 0 280 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+          <defs>
+            <marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#4ecb8d"/>
+            </marker>
+            <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa"/>
+            </marker>
+          </defs>
+          <!-- input nodes -->
+          <circle cx="40" cy="35" r="14" fill="#1a1a28" stroke="#4ecb8d" stroke-width="1.5"/>
+          <text x="40" y="39" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#4ecb8d">a</text>
+          <circle cx="40" cy="85" r="14" fill="#1a1a28" stroke="#a78bfa" stroke-width="1.5"/>
+          <text x="40" y="89" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#a78bfa">b</text>
+          <!-- output nodes -->
+          <circle cx="240" cy="35" r="14" fill="#1a1a28" stroke="#4ecb8d" stroke-width="1.5"/>
+          <text x="240" y="39" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#4ecb8d">a+ωb</text>
+          <circle cx="240" cy="85" r="14" fill="#1a1a28" stroke="#a78bfa" stroke-width="1.5"/>
+          <text x="240" y="89" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#a78bfa">a-ωb</text>
+          <!-- arrows: straight -->
+          <line x1="56" y1="35" x2="224" y2="35" stroke="#4ecb8d" stroke-width="1.5" marker-end="url(#arr1)"/>
+          <line x1="56" y1="85" x2="224" y2="85" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arr2)"/>
+          <!-- arrows: cross -->
+          <line x1="56" y1="42" x2="224" y2="80" stroke="#a78bfa" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="56" y1="78" x2="224" y2="42" stroke="#4ecb8d" stroke-width="1" stroke-dasharray="4,3"/>
+          <!-- twiddle label -->
+          <text x="140" y="15" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#f5a623">twiddle factor ω^k</text>
+        </svg>
+      </div>
+      <p style="font-size:.48em; color:var(--muted)">One addition and one subtraction, multiplied by a twiddle factor. Maps naturally to hardware and SIMD.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 16 — FFT Applications
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">16</span>
+    <h2>FFT — Applications &amp; Complexity</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Applications</h3>
+      <ul>
+        <li><strong>Polynomial multiplication</strong> — multiply two degree-n polynomials in <code>O(n log n)</code> instead of <code>O(n<sup>2</sup>)</code></li>
+        <li><strong>Big integer multiplication</strong> — Schonhage–Strassen uses FFT for <code>O(n log n log log n)</code></li>
+        <li><strong>Signal processing</strong> — spectral analysis, filtering, convolution</li>
+        <li><strong>Audio/image compression</strong> — MP3, JPEG rely on DCT (closely related)</li>
+        <li><strong>String matching</strong> — convolution-based pattern matching</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Related transforms</h3>
+      <table>
+        <thead>
+          <tr><th>Transform</th><th>Domain</th><th>Use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>FFT</strong></td><td>Complex numbers</td><td>General signal processing</td></tr>
+          <tr><td><strong>NTT</strong></td><td>Integers mod p</td><td>Exact polynomial arithmetic</td></tr>
+          <tr><td><strong>DCT</strong></td><td>Real numbers</td><td>Compression (JPEG, MP3)</td></tr>
+          <tr><td><strong>Walsh–Hadamard</strong></td><td>Binary/Boolean</td><td>Subset-sum convolutions</td></tr>
+        </tbody>
+      </table>
+      <div class="card green" style="margin-top:.5em">
+        <h3>Number-Theoretic Transform (NTT)</h3>
+        <p>FFT over finite fields (integers mod prime p) instead of complex numbers. Avoids floating-point errors entirely. Used in competitive programming and cryptographic polynomial multiplication.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 17 — Parallelism in D&C
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">17</span>
+    <h2>Parallelism in D&amp;C</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Natural parallelism</h3>
+      <p>D&amp;C subproblems are independent — they can run on separate cores, threads, or machines without synchronisation until the combine step.</p>
+      <h3>Fork-join model</h3>
+      <pre><code>fork-join quicksort(A, lo, hi):
+    if hi-lo &lt; THRESHOLD:
+        insertion_sort(A, lo, hi)
+        return
+    p = partition(A, lo, hi)
+    fork: quicksort(A, lo, p-1)
+    fork: quicksort(A, p+1, hi)
+    join</code></pre>
+      <h3>Work and span</h3>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Definition</th><th>Merge sort</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Work</strong> <code>W(n)</code></td><td>Total operations</td><td><code>O(n log n)</code></td></tr>
+          <tr><td><strong>Span</strong> <code>S(n)</code></td><td>Longest dependency chain</td><td><code>O(n)</code></td></tr>
+          <tr><td><strong>Parallelism</strong></td><td><code>W(n) / S(n)</code></td><td><code>O(log n)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Practical frameworks</h3>
+      <div class="card amber" style="margin-bottom:.25em">
+        <h3>Fork/Join — Java</h3>
+        <p><code>RecursiveTask</code>, work-stealing thread pool</p>
+      </div>
+      <div class="card green" style="margin-bottom:.25em">
+        <h3>TBB — C++</h3>
+        <p><code>parallel_for</code>, <code>parallel_reduce</code></p>
+      </div>
+      <div class="card purple" style="margin-bottom:.25em">
+        <h3>Cilk — C/C++</h3>
+        <p><code>cilk_spawn</code>, <code>cilk_sync</code></p>
+      </div>
+      <div class="card blue" style="margin-bottom:.25em">
+        <h3>Rayon — Rust</h3>
+        <p><code>par_iter</code>, work-stealing</p>
+      </div>
+      <div class="card red">
+        <h3>multiprocessing — Python</h3>
+        <p>Process pools (GIL workaround)</p>
+      </div>
+      <div class="card amber" style="margin-top:.4em">
+        <p><strong style="color:var(--amber)">Amdahl's Law:</strong> speedup is limited by the sequential fraction. In merge sort, the final merge is sequential and dominates at high core counts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 18 — Common Pitfalls & Optimisations
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">18</span>
+    <h2>Common Pitfalls &amp; Optimisations</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Pitfalls</h3>
+      <ul>
+        <li><strong>Stack overflow</strong> — deep recursion on large inputs. Use iterative bottom-up or increase stack size</li>
+        <li><strong>Small subproblem overhead</strong> — recursive calls on tiny arrays waste function-call overhead. Switch to insertion sort below 16–32 elements</li>
+        <li><strong>Worst-case pivot</strong> — deterministic Quick Sort on sorted input is <code>O(n<sup>2</sup>)</code>. Always randomise or use median-of-three</li>
+        <li><strong>Unnecessary copying</strong> — naive merge sort copies arrays at every level. Use index-based merging with a shared buffer</li>
+        <li><strong>Integer overflow</strong> — <code>(lo + hi) / 2</code> overflows for large arrays. Use <code>lo + (hi - lo) / 2</code></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Optimisations</h3>
+      <table>
+        <thead>
+          <tr><th>Technique</th><th>Applies to</th><th>Benefit</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Hybrid cutoff</strong></td><td>All D&amp;C sorts</td><td>Insertion sort for n &lt; 16</td></tr>
+          <tr><td><strong>Tail recursion</strong></td><td>Quick Sort</td><td><code>O(log n)</code> stack depth</td></tr>
+          <tr><td><strong>Introsort</strong></td><td>Quick Sort</td><td>Heap sort fallback at 2 log n depth</td></tr>
+          <tr><td><strong>Bottom-up merge</strong></td><td>Merge Sort</td><td>Better cache locality</td></tr>
+          <tr><td><strong>Bit-reversal</strong></td><td>FFT</td><td>In-place iterative FFT</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 19 — D&C in Practice
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">19</span>
+    <h2>D&amp;C in Practice</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Standard library sort implementations</h3>
+      <table>
+        <thead>
+          <tr><th>Language</th><th>Algorithm</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>C++</strong></td><td>Introsort</td><td>QS + Heap + Insertion</td></tr>
+          <tr><td><strong>Python</strong></td><td>Timsort</td><td>Merge + Insertion; exploits runs</td></tr>
+          <tr><td><strong>Java</strong></td><td>Dual-pivot QS / Timsort</td><td>QS for primitives, Timsort for objects</td></tr>
+          <tr><td><strong>Rust</strong></td><td>pdqsort</td><td>Pattern-defeating QS</td></tr>
+          <tr><td><strong>Go</strong></td><td>pdqsort (1.19+)</td><td>Replaced introsort</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>D&amp;C beyond sorting</h3>
+      <table>
+        <thead>
+          <tr><th>Domain</th><th>Algorithm</th><th>D&amp;C idea</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Geometry</td><td>Convex hull</td><td>Merge two convex hulls</td></tr>
+          <tr><td>Linear algebra</td><td>Strassen, FFT solvers</td><td>Block decomposition</td></tr>
+          <tr><td>Databases</td><td>External merge sort</td><td>Divide across disk pages</td></tr>
+          <tr><td>Distributed</td><td>MapReduce</td><td>Map = divide, Reduce = combine</td></tr>
+          <tr><td>Graphics</td><td>BSP trees, k-d trees</td><td>Spatial subdivision</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card amber" style="margin-top:0.5em">
+    <p>If your problem decomposes into independent subproblems of the same type, D&amp;C is likely the right paradigm.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 20 — Summary & Further Reading
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">20</span>
+    <h2>Summary &amp; Further Reading</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>Divide and conquer is a fundamental paradigm: divide, conquer, combine</li>
+        <li>The Master Theorem provides closed-form O-notation for most D&amp;C recurrences</li>
+        <li>Merge Sort is the stable <code>O(n log n)</code> baseline; Quick Sort wins in practice</li>
+        <li>Strassen, Karatsuba, and FFT beat "obvious" lower bounds via clever decomposition</li>
+        <li>Binary search is the simplest D&amp;C — master its variants and off-by-one traps</li>
+        <li>D&amp;C is naturally parallel: independent subproblems map to cores/machines</li>
+        <li>Real-world implementations are hybrid: switch strategies at small sizes and degenerate inputs</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Recommended reading</h3>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.2em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">CLRS</span><span style="color:var(--text)"><em>Introduction to Algorithms</em> — chapters 2, 4, 7, 9, 33 cover all major D&amp;C topics</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Kleinberg &amp; Tardos</span><span style="color:var(--text)"><em>Algorithm Design</em> — excellent D&amp;C chapter with closest pair, FFT</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Sedgewick</span><span style="color:var(--text)"><em>Algorithms</em> — practical Quick Sort and Merge Sort analysis</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Jeff Erickson</span><span style="color:var(--text)"><a href="http://jeffe.cs.illinois.edu/teaching/algorithms/">jeffe.cs.illinois.edu</a> — free textbook, outstanding recursion chapter</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">MIT 6.046</span><span style="color:var(--text)"><em>Design and Analysis of Algorithms</em> — D&amp;C lectures on YouTube</span></div>
+      <div class="card blue" style="margin-top:0.8em">
+        <p>
+        <span class="pill amber">Merge Sort</span>
+        <span class="pill green">Quick Sort</span>
+        <span class="pill purple">Strassen</span>
+        <span class="pill amber">FFT</span>
+        <span class="pill green">Karatsuba</span>
+        <span class="pill purple">Binary Search</span>
+        <span class="pill amber">Closest Pair</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  transition: 'fade',
+  transitionSpeed: 'fast',
+  controls: true,
+  progress: true,
+  center: false,
+  width: 1100,
+  height: 900,
+  margin: 0.01,
+  plugins: [RevealHighlight],
+  highlight: { theme: 'monokai' }
+});
+</script>
+<script>
+(function(){
+  var h = Reveal.getConfig().height || 900;
+  var m = Reveal.getConfig().margin || 0.02;
+  var maxH = Math.floor(h * (1 - 2 * m)) + 'px';
+  function fixSlides(){
+    document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){
+      s.style.display = 'block';
+      s.style.maxHeight = maxH;
+    });
+  }
+  Reveal.on('ready', fixSlides);
+  Reveal.on('slidechanged', fixSlides);
+})();
+</script>
+</body>
+</html>
