@@ -10,7 +10,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Azeret+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
   <style>
   :root {
@@ -30,14 +30,14 @@
   .reveal-viewport { background: var(--bg); }
   .reveal .slides section { background: transparent; }
 
-  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+  .reveal { font-family: 'Schibsted Grotesk', sans-serif; color: var(--text); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Schibsted Grotesk', serif; font-weight: 700; }
   .reveal h1 { font-size: 1.6em; color: var(--amber); line-height: 1.1; }
   .reveal h2 { font-size: 1.1em; color: var(--amber); margin-bottom: .2em; }
   .reveal h3 { font-size: .78em; color: var(--green); margin-bottom: .15em; }
   .reveal p  { font-size: .56em; line-height: 1.45; color: var(--text); }
   .reveal li { font-size: .54em; line-height: 1.45; margin-bottom: .1em; }
-  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal code { font-family: 'Azeret Mono', monospace; font-size: .72em; }
   .reveal pre  { box-shadow: none; background: var(--bg3); border: 1px solid var(--border);
                  border-radius: 6px; padding: .3em .5em; margin: .25em 0; }
   .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #242422; }
@@ -49,7 +49,7 @@
     padding-bottom: .2em; margin-bottom: .3em;
   }
   .slide-hdr .tag {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Azeret Mono', monospace;
     font-size: .42em; font-weight: 500;
     color: var(--bg); background: var(--amber);
     padding: .1em .4em; border-radius: 3px;
@@ -92,14 +92,14 @@
   .p  { color: var(--purple); font-weight: 600; }
   .b  { color: var(--blue); font-weight: 600; }
   .r  { color: var(--red); font-weight: 600; }
-  .mono { font-family: 'JetBrains Mono', monospace; }
+  .mono { font-family: 'Azeret Mono', monospace; }
 
   /* ── SVG graph diagrams ── */
   svg.diagram { display: block; margin: 0 auto; overflow: visible; }
 
   /* ── pill badges ── */
   .pill {
-    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    display: inline-block; font-family: 'Azeret Mono', monospace;
     font-size: .44em; padding: .08em .4em; border-radius: 99px;
     border: 1px solid; margin: 0 .08em;
   }
@@ -113,15 +113,15 @@
   /* title slide special */
   .title-slide h1 { font-size: 1.8em; }
   .title-slide .subtitle {
-    font-size: .7em; color: var(--green); font-family: 'DM Sans', sans-serif;
+    font-size: .7em; color: var(--green); font-family: 'Schibsted Grotesk', sans-serif;
     font-weight: 300; letter-spacing: .04em; margin: .3em 0 .6em;
   }
-  .title-slide .meta { font-size: .48em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .title-slide .meta { font-size: .48em; color: var(--muted); font-family: 'Azeret Mono', monospace; }
 
   /* ── super-step animator ── */
   .ss-row {
     display: flex; gap: .25em; align-items: center;
-    margin: .1em 0; font-size: .55em; font-family: 'JetBrains Mono', monospace;
+    margin: .1em 0; font-size: .55em; font-family: 'Azeret Mono', monospace;
   }
   .ss-node {
     padding: .2em .55em; border-radius: 5px; font-size: .9em;
@@ -146,7 +146,7 @@
   SLIDE 01 — Title
 ══════════════════════════════════════════════════════════════════ -->
 <section class="title-slide" data-background-color="#fafaf8">
-  <div style="font-family:'JetBrains Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
+  <div style="font-family:'Azeret Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
   <h1>Divide and<br>Conquer</h1>
   <div class="subtitle">
     Master theorem · Merge sort · Quick sort ·<br>
@@ -172,15 +172,15 @@
       <p>Every divide-and-conquer algorithm follows the same recursive blueprint:</p>
       <div style="display:flex; flex-direction:column; gap:.3em; margin-top:0.3em">
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.35em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--amber)">Divide</strong> — break the problem into smaller, independent subproblems of the same type</span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.35em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--green)">Conquer</strong> — solve each subproblem recursively; if small enough, solve directly (base case)</span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.35em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.4em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--purple)">Combine</strong> — merge the subproblem solutions into a solution for the original problem</span>
         </div>
       </div>
@@ -297,15 +297,15 @@
       <h3>The canonical D&amp;C sort</h3>
       <div style="display:flex; flex-direction:column; gap:.25em; margin-top:0.2em">
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--amber)">Divide</strong> — split array into two halves</span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--green)">Conquer</strong> — recursively sort each half</span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--purple)">Combine</strong> — merge two sorted halves in <code>O(n)</code></span>
         </div>
       </div>
@@ -395,15 +395,15 @@ Total: n · log n</code></pre>
       <h3>Algorithm</h3>
       <div style="display:flex; flex-direction:column; gap:.25em; margin-top:0.2em">
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--amber)">1</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--amber)">Divide</strong> — choose a pivot, partition the array around it</span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--green)">2</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--green)">Conquer</strong> — recursively sort elements less than and greater than pivot</span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:.5em; background:var(--bg3); border-radius:6px; padding:.3em .6em; font-size:.52em; border:1px solid var(--border);">
-          <span style="font-family:'JetBrains Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
+          <span style="font-family:'Azeret Mono',monospace; font-size:1.2em; font-weight:700; min-width:0.9em; line-height:1; color:var(--purple)">3</span>
           <span style="color:var(--text); line-height:1.5"><strong style="color:var(--purple)">Combine</strong> — nothing; partitioning is in-place</span>
         </div>
       </div>
@@ -606,13 +606,13 @@ M7 = (A12 - A22)(B21 + B22)</code></pre>
         <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
           <!-- left region -->
           <rect x="10" y="10" width="120" height="180" rx="4" fill="#e7e7e2" stroke="#d1d1cb"/>
-          <text x="70" y="30" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#2b3dc5">Left half</text>
+          <text x="70" y="30" text-anchor="middle" font-family="'Schibsted Grotesk',sans-serif" font-size="11" fill="#2b3dc5">Left half</text>
           <!-- right region -->
           <rect x="170" y="10" width="120" height="180" rx="4" fill="#e7e7e2" stroke="#d1d1cb"/>
-          <text x="230" y="30" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="#2b3dc5">Right half</text>
+          <text x="230" y="30" text-anchor="middle" font-family="'Schibsted Grotesk',sans-serif" font-size="11" fill="#2b3dc5">Right half</text>
           <!-- strip -->
           <rect x="110" y="10" width="80" height="180" rx="0" fill="#f8e2c5" opacity="0.3" stroke="#bf7d10" stroke-dasharray="4,3"/>
-          <text x="150" y="30" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#bf7d10">strip 2d</text>
+          <text x="150" y="30" text-anchor="middle" font-family="'Azeret Mono',monospace" font-size="10" fill="#bf7d10">strip 2d</text>
           <!-- dividing line -->
           <line x1="150" y1="10" x2="150" y2="190" stroke="#bf7d10" stroke-width="1.5" stroke-dasharray="6,3"/>
           <!-- sample points -->
@@ -803,14 +803,14 @@ O = DFT of odd elements</code></pre>
           </defs>
           <!-- input nodes -->
           <circle cx="40" cy="35" r="14" fill="#e7e7e2" stroke="#1c815a" stroke-width="1.5"/>
-          <text x="40" y="39" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1c815a">a</text>
+          <text x="40" y="39" text-anchor="middle" font-family="'Azeret Mono',monospace" font-size="10" fill="#1c815a">a</text>
           <circle cx="40" cy="85" r="14" fill="#e7e7e2" stroke="#6435bc" stroke-width="1.5"/>
-          <text x="40" y="89" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#6435bc">b</text>
+          <text x="40" y="89" text-anchor="middle" font-family="'Azeret Mono',monospace" font-size="10" fill="#6435bc">b</text>
           <!-- output nodes -->
           <circle cx="240" cy="35" r="14" fill="#e7e7e2" stroke="#1c815a" stroke-width="1.5"/>
-          <text x="240" y="39" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#1c815a">a+ωb</text>
+          <text x="240" y="39" text-anchor="middle" font-family="'Azeret Mono',monospace" font-size="9" fill="#1c815a">a+ωb</text>
           <circle cx="240" cy="85" r="14" fill="#e7e7e2" stroke="#6435bc" stroke-width="1.5"/>
-          <text x="240" y="89" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#6435bc">a-ωb</text>
+          <text x="240" y="89" text-anchor="middle" font-family="'Azeret Mono',monospace" font-size="9" fill="#6435bc">a-ωb</text>
           <!-- arrows: straight -->
           <line x1="56" y1="35" x2="224" y2="35" stroke="#1c815a" stroke-width="1.5" marker-end="url(#arr1)"/>
           <line x1="56" y1="85" x2="224" y2="85" stroke="#6435bc" stroke-width="1.5" marker-end="url(#arr2)"/>
@@ -818,7 +818,7 @@ O = DFT of odd elements</code></pre>
           <line x1="56" y1="42" x2="224" y2="80" stroke="#6435bc" stroke-width="1" stroke-dasharray="4,3"/>
           <line x1="56" y1="78" x2="224" y2="42" stroke="#1c815a" stroke-width="1" stroke-dasharray="4,3"/>
           <!-- twiddle label -->
-          <text x="140" y="15" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#bf7d10">twiddle factor ω^k</text>
+          <text x="140" y="15" text-anchor="middle" font-family="'Azeret Mono',monospace" font-size="10" fill="#bf7d10">twiddle factor ω^k</text>
         </svg>
       </div>
       <p style="font-size:.48em; color:var(--muted)">One addition and one subtraction, multiplied by a twiddle factor. Maps naturally to hardware and SIMD.</p>
@@ -1033,11 +1033,11 @@ O = DFT of odd elements</code></pre>
     </div>
     <div>
       <h3>Recommended reading</h3>
-      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.2em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">CLRS</span><span style="color:var(--text)"><em>Introduction to Algorithms</em> — chapters 2, 4, 7, 9, 33 cover all major D&amp;C topics</span></div>
-      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Kleinberg &amp; Tardos</span><span style="color:var(--text)"><em>Algorithm Design</em> — excellent D&amp;C chapter with closest pair, FFT</span></div>
-      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Sedgewick</span><span style="color:var(--text)"><em>Algorithms</em> — practical Quick Sort and Merge Sort analysis</span></div>
-      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Jeff Erickson</span><span style="color:var(--text)"><a href="http://jeffe.cs.illinois.edu/teaching/algorithms/">jeffe.cs.illinois.edu</a> — free textbook, outstanding recursion chapter</span></div>
-      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'JetBrains Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">MIT 6.046</span><span style="color:var(--text)"><em>Design and Analysis of Algorithms</em> — D&amp;C lectures on YouTube</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.2em 0;"><span style="font-family:'Azeret Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">CLRS</span><span style="color:var(--text)"><em>Introduction to Algorithms</em> — chapters 2, 4, 7, 9, 33 cover all major D&amp;C topics</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'Azeret Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Kleinberg &amp; Tardos</span><span style="color:var(--text)"><em>Algorithm Design</em> — excellent D&amp;C chapter with closest pair, FFT</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'Azeret Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Sedgewick</span><span style="color:var(--text)"><em>Algorithms</em> — practical Quick Sort and Merge Sort analysis</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'Azeret Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">Jeff Erickson</span><span style="color:var(--text)"><a href="http://jeffe.cs.illinois.edu/teaching/algorithms/">jeffe.cs.illinois.edu</a> — free textbook, outstanding recursion chapter</span></div>
+      <div style="display:flex; gap:0.6em; align-items:baseline; font-size:0.52em; margin:0.4em 0;"><span style="font-family:'Azeret Mono',monospace; color:var(--amber); min-width:9em; font-size:0.9em;">MIT 6.046</span><span style="color:var(--text)"><em>Design and Analysis of Algorithms</em> — D&amp;C lectures on YouTube</span></div>
       <div class="card blue" style="margin-top:0.8em">
         <p>
         <span class="pill amber">Merge Sort</span>
